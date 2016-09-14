@@ -1,0 +1,9 @@
+<h1>List of Artists</h1>
+
+<ul>
+  #foreach ($artist in $artists)
+    <li><a href="/artists/$artist.getId()">$artist.getName()</a></li>
+  #end
+</ul>
+
+<a href="/artists/new">Add New Artist</a>

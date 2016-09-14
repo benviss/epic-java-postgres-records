@@ -1,0 +1,13 @@
+<h1>Record list!</h1>
+
+#if ($records)
+  <ul>
+    #foreach ($record in $records)
+      <li><a href="/records/$record.getId()">$record.getName()</a></li>
+    #end
+  </ul>
+#else
+  <p>No records!</p>
+#end
+
+<a href="/records/new">Add New Record</a>

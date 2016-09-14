@@ -1,0 +1,10 @@
+<h1>$artist.getName() Records:</h1>
+
+<ul>
+  #foreach($record in $artist.getRecords())
+    <li>$record.getName()</li>
+  #end
+</ul>
+
+<a href="/artists/$artist.getId()/records/new">Add a new record</a>
+<a href="/artists">All Artists</a>

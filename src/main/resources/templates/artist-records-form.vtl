@@ -1,0 +1,11 @@
+<h1>Add a record to $artist.getName()</h1>
+
+<form action="/records" method="post">
+  <input id="artistId" name="artistId" type="hidden" value="$artist.getId()">
+
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input id="name" name="name" type="text" class="form-control">
+  </div>
+
+  <button type="submit" class="btn">Add Record</button>
