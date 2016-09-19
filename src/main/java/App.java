@@ -34,8 +34,8 @@ public class App {
       Map<String, Object> model = new HashMap<String, Object>();
       Artist artist = Artist.find(Integer.parseInt(request.queryParams("artistId")));
       String name = request.queryParams("name");
-      Record newRecord = new Record(name);
-      artist.addRecord(newRecord);
+      Record newRecord = new Record(name, artist.getId());
+      newRecord.save();
       model.put("artist", artist);
       model.put("template", "templates/artist-record-success.vtl");
       return new ModelAndView(model, layout);
@@ -59,7 +59,7 @@ public class App {
       Map<String, Object> model = new HashMap<String, Object>();
       String name = request.queryParams("name");
       Artist newArtist = new Artist(name);
-
+      newArtist.save();
       model.put("template", "templates/artist-success.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());

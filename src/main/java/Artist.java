@@ -1,45 +1,70 @@
 import java.util.List;
+import org.sql2o.*;
 import java.util.ArrayList;
 
 public class Artist {
-  private String mName;
-  private static ArrayList<Artist> instances = new ArrayList<Artist>();
-  private int mId;
-  private List<Record> mRecords;
+  private String name;
+  private int id;
 
-  public Artist(String _name) {
-    mName = _name;
-    instances.add(this);
-    mId = instances.size();
-    mRecords = new ArrayList<Record>();
-  }
-
-  public static ArrayList<Artist> all() {
-    return instances;
-  }
-
-  public static Artist find(int _id) {
-    return instances.get(_id - 1);
-  }
-
-  public static void clear() {
-    instances.clear();
+  public Artist(String name) {
+    this.name = name;
   }
 
   public String getName() {
-    return mName;
+    return name;
+  }
+
+  public static List<Artist> all() {
+    String sql = "SELECT id, name FROM artists";
+    try(Connection con = DB.sql2o.open()) {
+      return con.createQuery(sql).executeAndFetch(Artist.class);
+    }
   }
 
   public int getId() {
-    return mId;
+    return id;
+  }
+
+  public static Artist find(int id) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM artists where id=:id";
+      Artist artist = con.createQuery(sql)
+        .addParameter("id", id)
+        .executeAndFetchFirst(Artist.class);
+      return artist;
+    }
   }
 
   public List<Record> getRecords() {
-    return mRecords;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM records where artistId=:id";
+      return con.createQuery(sql)
+        .addParameter("id", this.id)
+        .executeAndFetch(Record.class);
+    }
   }
 
-  public void addRecord(Record _record) {
-    mRecords.add(_record);
+
+  @Override
+  public boolean equals(Object otherArtist) {
+    if (!(otherArtist instanceof Artist)) {
+      return false;
+    } else {
+      Artist newArtist = (Artist) otherArtist;
+      return this.getName().equals(newArtist.getName()) && this.getId() == newArtist.getId();
+    }
+  }
+
+
+
+  public void save() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "INSERT INTO artists(name) VALUES (:name)";
+      this.id = (int) con.createQuery(sql, true)
+        .addParameter("name", this.name)
+        .executeUpdate()
+        .getKey();
+    }
   }
 
 }
